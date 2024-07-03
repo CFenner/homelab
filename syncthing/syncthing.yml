@@ -1,0 +1,21 @@
+name: syncthing
+services:
+  syncthing:
+    image: syncthing/syncthing
+    container_name: Syncthing
+    environment:
+      - PUID=1000
+      - PGID=1000
+    labels:
+      homepage.group: Container
+      homepage.name: Syncthing ($HOMELAB_HOSTNAME)
+      homepage.icon: syncthing
+      homepage.href: http://$HOMELAB_HOST:8384
+    volumes:
+      - /home/pi/docker:/docker
+    ports:
+      - 8384:8384 # Web UI
+      - 22000:22000/tcp # TCP file transfers
+      - 22000:22000/udp # QUIC file transfers
+      - 21027:21027/udp # Receive local discovery broadcasts
+    restart: unless-stopped
