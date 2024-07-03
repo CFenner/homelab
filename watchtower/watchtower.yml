@@ -1,0 +1,21 @@
+name: watchtower
+services:
+  watchtower:
+    image: containrrr/watchtower
+    container_name: "Watchtower"
+    ports:
+      - 8080:8080
+    environment:
+      - WATCHTOWER_POLL_INTERVAL=21600 # every 6h
+      - WATCHTOWER_HTTP_API_METRICS=true
+      - WATCHTOWER_HTTP_API_TOKEN=$HOMELAB_WATCHTOWER_KEY
+    labels:
+      homepage.group: Container
+      homepage.name: Watchtower ($HOMELAB_HOSTNAME)
+      homepage.icon: watchtower
+      homepage.widget.type: watchtower
+      homepage.widget.url: http://$HOMELAB_HOST:8080
+      homepage.widget.key: $HOMELAB_WATCHTOWER_KEY
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
