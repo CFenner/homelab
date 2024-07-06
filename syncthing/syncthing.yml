@@ -4,11 +4,18 @@ services:
     image: syncthing/syncthing
     container_name: Syncthing
     restart: unless-stopped
+    ports:
+#      - 8384:8384 # Web UI
+      - 22000:22000/tcp # TCP file transfers
+      - 22000:22000/udp # QUIC file transfers
+      - 21027:21027/udp # Receive local discovery broadcasts
+    networks:
+      - traefik
     environment:
       - PUID=1000
       - PGID=1000
     labels:
-      homepage.group: $HOMELAB_HOSTNAME
+      homepage.group: $HOMELAB_HOSTTITLE
       homepage.name: Syncthing
       homepage.icon: syncthing
       homepage.href: http://syncthing-$HOMELAB_HOSTNAME.local.$HOMELAB_DOMAIN
@@ -21,8 +28,7 @@ services:
       traefik.http.services.syncthing.loadbalancer.server.port: 8384
     volumes:
       - /home/pi/docker:/docker
-    ports:
-#      - 8384:8384 # Web UI
-      - 22000:22000/tcp # TCP file transfers
-      - 22000:22000/udp # QUIC file transfers
-      - 21027:21027/udp # Receive local discovery broadcasts
+networks:
+  traefik:
+    external: true
+    name: traefik_traefik
