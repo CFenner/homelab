@@ -17,7 +17,7 @@ services:
       traefik.http.routers.homepage.rule: Host(`syncthing.local.$HOMELAB_DOMAIN`)
       traefik.http.routers.homepage.tls: true
       traefik.http.routers.homepage.tls.domains[0].main: local.$HOMELAB_DOMAIN
-      traefik.http.routers.homepage.tls.domains[0].sans: *.local.$HOMELAB_DOMAIN
+      traefik.http.routers.homepage.tls.domains[0].sans: "*.local.$HOMELAB_DOMAIN"
       traefik.http.services.homepage.loadbalancer.server.port: 8384
     volumes:
       - /home/pi/docker:/docker
