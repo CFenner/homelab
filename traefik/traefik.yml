@@ -40,6 +40,13 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
     labels:
+      - "homepage.group=$HOMELAB_HOSTNAME"
+      - "homepage.name=Traefik"
+      - "homepage.description=Routing"
+      - "homepage.icon=traefik"
+      - "homepage.href=https://traefik-$HOMELAB_HOSTNAME.local.$HOMELAB_DOMAIN"
+      - "homepage.widget.type=traefik"
+      - "homepage.widget.url=https://traefik-$HOMELAB_HOSTNAME.local.$HOMELAB_DOMAIN"
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=https"
       - "traefik.http.routers.traefik.rule=Host(`traefik-$HOMELAB_HOSTNAME.local.$HOMELAB_DOMAIN`)"
@@ -48,13 +55,6 @@ services:
       - "traefik.http.routers.traefik.tls.domains[0].main=local.$HOMELAB_DOMAIN"
       - "traefik.http.routers.traefik.tls.domains[0].sans=*.local.$HOMELAB_DOMAIN"
       - "traefik.http.services.traefik.loadbalancer.server.port=80"
-      - "homepage.group=Services"
-      - "homepage.name=Traefik ($HOMELAB_HOSTNAME)"
-      - "homepage.description=Routing"
-      - "homepage.icon=traefik"
-      - "homepage.href=https://traefik-$HOMELAB_HOSTNAME.local.$HOMELAB_DOMAIN"
-      - "homepage.widget.type=traefik"
-      - "homepage.widget.url=https://traefik-$HOMELAB_HOSTNAME.local.$HOMELAB_DOMAIN"
 networks:
   traefik:
     driver: bridge
