@@ -8,13 +8,13 @@ services:
       - PUID=1000
       - PGID=1000
     labels:
-      homepage.group: Container
-      homepage.name: Syncthing ($HOMELAB_HOSTNAME)
+      homepage.group: $HOMELAB_HOSTNAME
+      homepage.name: Syncthing
       homepage.icon: syncthing
-      homepage.href: http://syncthing.local.$HOMELAB_DOMAIN
+      homepage.href: http://syncthing-$HOMELAB_HOSTNAME.local.$HOMELAB_DOMAIN
       traefik.enable: true
       traefik.http.routers.syncthing.entrypoints: https
-      traefik.http.routers.syncthing.rule: Host(`syncthing.local.$HOMELAB_DOMAIN`)
+      traefik.http.routers.syncthing.rule: Host(`syncthing-$HOMELAB_HOSTNAME.local.$HOMELAB_DOMAIN`)
       traefik.http.routers.syncthing.tls: true
       traefik.http.routers.syncthing.tls.domains[0].main: local.$HOMELAB_DOMAIN
       traefik.http.routers.syncthing.tls.domains[0].sans: "*.local.$HOMELAB_DOMAIN"
@@ -22,7 +22,7 @@ services:
     volumes:
       - /home/pi/docker:/docker
     ports:
-      - 8384:8384 # Web UI
+#      - 8384:8384 # Web UI
       - 22000:22000/tcp # TCP file transfers
       - 22000:22000/udp # QUIC file transfers
       - 21027:21027/udp # Receive local discovery broadcasts
