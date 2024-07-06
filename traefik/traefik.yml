@@ -40,7 +40,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
     labels:
-      - "homepage.group=$HOMELAB_HOSTNAME"
+      - "homepage.group=$HOMELAB_HOSTTITLE"
       - "homepage.name=Traefik"
       - "homepage.description=Routing"
       - "homepage.icon=traefik"
