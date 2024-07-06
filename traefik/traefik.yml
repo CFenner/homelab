@@ -20,7 +20,7 @@ services:
       - "--providers.docker.exposedbydefault=false"
 #      - "--providers.file.directory=/etc/traefik"
       - "--certificatesresolvers.letsencrypt.acme.email=$HOMELAB_CLOUDFLARE_EMAIL"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.storage=acme.json"
       - "--certificatesresolvers.letsencrypt.acme.dnsChallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.dnsChallenge.provider=cloudflare"
       - "--certificatesResolvers.letsencrypt.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53"
