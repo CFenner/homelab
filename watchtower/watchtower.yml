@@ -4,10 +4,12 @@ services:
     image: containrrr/watchtower
     restart: unless-stopped
     container_name: "Watchtower"
-    networks:
-      - traefik
 #    ports:
 #      - 8080:8080
+    networks:
+      - traefik
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - WATCHTOWER_POLL_INTERVAL=21600 # every 6h
       - WATCHTOWER_HTTP_API_METRICS=true
@@ -26,8 +28,6 @@ services:
       traefik.http.routers.watchtower.tls.domains[0].sans: "*.local.$HOMELAB_DOMAIN"
       traefik.http.routers.watchtower.rule: Host(`watchtower-$HOMELAB_HOSTNAME.local.$HOMELAB_DOMAIN`)
       traefik.http.services.watchtower.loadbalancer.server.port: 8080
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
 networks:
   traefik:
     external: true
