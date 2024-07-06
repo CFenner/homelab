@@ -1,7 +1,7 @@
 name: gotify
 services:
   gotify:
-    image: gotify/server
+    image: gotify/server-arm7
     container_name: Gotify
     networks:
       traefik:
