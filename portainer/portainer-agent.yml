@@ -1,19 +1,22 @@
-# run with sudo docker compose --file portainer-agent.yml up --detach
+# run with sudo docker compose --file portainer-agent.yml up --detach --force-recreate
 
-name: portainer      
+name: portainer
 services:
   portainer:
     image: portainer/agent:latest
     container_name: Portainer-Agent
+    restart: always
     ports:
       - 9001:9001
-    restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker/volumes:/var/lib/docker/volumes
     labels:
-      - homepage.group=Container
-      - homepage.name=Portainer-Agent
-      - homepage.icon=portainer
-      - homepage.href=http://<ip>:9001
-      - homepage.description=
+      homepage.group: $HOMELAB_HOSTTITLE
+      homepage.name: Portainer-Agent
+      homepage.icon: portainer
+      homepage.weight: 150
+      homepage.widget.type: portainer
+      homepage.widget.url: https://portainer.local.$HOMELAB_DOMAIN
+      homepage.widget.env: $HOMELAB_PORTAINER_ENV
+      homepage.widget.key: $HOMELAB_PORTAINER_KEY
