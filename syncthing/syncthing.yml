@@ -13,12 +13,12 @@ services:
       homepage.icon: syncthing
       homepage.href: http://syncthing.local.$HOMELAB_DOMAIN
       traefik.enable: true
-      traefik.http.routers.homepage.entrypoints: https
-      traefik.http.routers.homepage.rule: Host(`syncthing.local.$HOMELAB_DOMAIN`)
-      traefik.http.routers.homepage.tls: true
-      traefik.http.routers.homepage.tls.domains[0].main: local.$HOMELAB_DOMAIN
-      traefik.http.routers.homepage.tls.domains[0].sans: "*.local.$HOMELAB_DOMAIN"
-      traefik.http.services.homepage.loadbalancer.server.port: 8384
+      traefik.http.routers.syncthing.entrypoints: https
+      traefik.http.routers.syncthing.rule: Host(`syncthing.local.$HOMELAB_DOMAIN`)
+      traefik.http.routers.syncthing.tls: true
+      traefik.http.routers.syncthing.tls.domains[0].main: local.$HOMELAB_DOMAIN
+      traefik.http.routers.syncthing.tls.domains[0].sans: "*.local.$HOMELAB_DOMAIN"
+      traefik.http.services.syncthing.loadbalancer.server.port: 8384
     volumes:
       - /home/pi/docker:/docker
     ports:
