@@ -3,6 +3,7 @@ services:
   syncthing:
     image: syncthing/syncthing
     container_name: Syncthing
+    restart: unless-stopped
     environment:
       - PUID=1000
       - PGID=1000
@@ -10,7 +11,14 @@ services:
       homepage.group: Container
       homepage.name: Syncthing ($HOMELAB_HOSTNAME)
       homepage.icon: syncthing
-      homepage.href: http://$HOMELAB_HOST:8384
+      homepage.href: http://syncthing.local.$HOMELAB_DOMAIN
+      traefik.enable: true
+      traefik.http.routers.homepage.entrypoints: https
+      traefik.http.routers.homepage.rule: Host(`syncthing.local.$HOMELAB_DOMAIN`)
+      traefik.http.routers.homepage.tls: true
+      traefik.http.routers.homepage.tls.domains[0].main: local.$HOMELAB_DOMAIN
+      traefik.http.routers.homepage.tls.domains[0].sans: *.local.$HOMELAB_DOMAIN
+      traefik.http.services.homepage.loadbalancer.server.port: 8384
     volumes:
       - /home/pi/docker:/docker
     ports:
@@ -18,4 +26,3 @@ services:
       - 22000:22000/tcp # TCP file transfers
       - 22000:22000/udp # QUIC file transfers
       - 21027:21027/udp # Receive local discovery broadcasts
-    restart: unless-stopped
