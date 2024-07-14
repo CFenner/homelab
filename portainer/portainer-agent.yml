@@ -15,7 +15,6 @@ services:
       homepage.group: $HOMELAB_HOSTTITLE
       homepage.name: Portainer-Agent
       homepage.icon: portainer
-      homepage.weight: 150
       homepage.widget.type: portainer
       homepage.widget.url: https://portainer.local.$HOMELAB_DOMAIN
       homepage.widget.env: $HOMELAB_PORTAINER_ENV

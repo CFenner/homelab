@@ -1,32 +1,32 @@
 name: gotify
 services:
   gotify:
-    image: gotify/server-arm7
+    image: gotify/server-arm7:latest
     container_name: Gotify
     networks:
       traefik:
 #    ports:
 #      - 80:80
+    volumes:
+      - /home/pi/docker/gotify:/app/data
 #    environment:
 #      - GOTIFY_DEFAULTUSER_PASS=
-    volumes:
-      - "/home/pi/docker/gotify:/app/data"
     labels:
-      - "homepage.group=Services"
-      - "homepage.name=Gotify"
-      - "homepage.description=Notifications"
-      - "homepage.icon=gotify"
-      - "homepage.href=https://gotify.local.$HOMELAB_DOMAIN"
-      - "homepage.widget.type=gotify"
-      - "homepage.widget.url=https://gotify.local.$HOMELAB_DOMAIN"
-      - "homepage.widget.key=$HOMELAB_GOTIFY_KEY"
-      - "traefik.enable=true"
-      - "traefik.http.routers.gotify.entrypoints=https"
-      - "traefik.http.routers.gotify.tls=true"
-      - "traefik.http.routers.gotify.tls.domains[0].main=local.$HOMELAB_DOMAIN"
-      - "traefik.http.routers.gotify.tls.domains[0].sans=*.local.$HOMELAB_DOMAIN"
-      - "traefik.http.routers.gotify.rule=Host(`gotify.local.$HOMELAB_DOMAIN`)"
-      - "traefik.http.services.gotify.loadbalancer.server.port=80"
+      homepage.group: Services
+      homepage.name: Gotify
+      homepage.description: Notifications
+      homepage.icon: gotify
+      homepage.href: https://gotify.local.$HOMELAB_DOMAIN
+      homepage.widget.type: gotify
+      homepage.widget.url: https://gotify.local.$HOMELAB_DOMAIN
+      homepage.widget.key: $HOMELAB_GOTIFY_KEY
+      traefik.enable: true
+      traefik.http.routers.gotify.entrypoints: https
+      traefik.http.routers.gotify.tls: true
+      traefik.http.routers.gotify.tls.domains[0].main: local.$HOMELAB_DOMAIN
+      traefik.http.routers.gotify.tls.domains[0].sans: "*.local.$HOMELAB_DOMAIN"
+      traefik.http.routers.gotify.rule: Host(`gotify.local.$HOMELAB_DOMAIN`)
+      traefik.http.services.gotify.loadbalancer.server.port: 80
 networks:
   traefik:
     external: true

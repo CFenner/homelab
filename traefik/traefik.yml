@@ -3,8 +3,8 @@
 name: traefik
 services:
   traefik:
-    image: "traefik:latest"
-    container_name: "Traefik"
+    image: traefik:latest
+    container_name: Traefik
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -24,12 +24,12 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.dnsChallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.dnsChallenge.provider=cloudflare"
       - "--certificatesResolvers.letsencrypt.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53"
+    networks:
+      - traefik
     ports:
       - "80:80"
       - "443:443"
 #      - "8080:8080"
-    networks:
-      - traefik
     volumes:
 #      - /home/pi/docker/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
 #      - /home/pi/docker/traefik/rules.yml:/etc/traefik/rules.yml:ro
@@ -37,8 +37,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
     environment:
-      - "CF_API_EMAIL=$HOMELAB_CLOUDFLARE_EMAIL"
-      - "CF_API_KEY=$HOMELAB_CLOUDFLARE_KEY"
+      CF_API_EMAIL: $HOMELAB_CLOUDFLARE_EMAIL
+      CF_API_KEY: $HOMELAB_CLOUDFLARE_KEY
     labels:
       homepage.group: $HOMELAB_HOSTTITLE
       homepage.name: Traefik

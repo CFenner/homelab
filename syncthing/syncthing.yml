@@ -1,21 +1,21 @@
 name: syncthing
 services:
   syncthing:
-    image: syncthing/syncthing
+    image: syncthing/syncthing:latest
     container_name: Syncthing
     restart: unless-stopped
+    networks:
+      - traefik
     ports:
 #      - 8384:8384 # Web UI
       - 22000:22000/tcp # TCP file transfers
       - 22000:22000/udp # QUIC file transfers
       - 21027:21027/udp # Receive local discovery broadcasts
-    networks:
-      - traefik
-    environment:
-      - PUID=1000
-      - PGID=1000
     volumes:
       - /home/pi/docker:/docker
+    environment:
+      PUID: 1000
+      PGID: 1000
     labels:
       homepage.group: $HOMELAB_HOSTTITLE
       homepage.name: Syncthing

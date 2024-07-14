@@ -1,22 +1,22 @@
 name: watchtower
 services:
   watchtower:
-    image: containrrr/watchtower
+    image: containrrr/watchtower:latest
+    container_name: Watchtower
     restart: unless-stopped
-    container_name: "Watchtower"
-#    ports:
-#      - 8080:8080
     networks:
       - traefik
+#    ports:
+#      - 8080:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - WATCHTOWER_POLL_INTERVAL=21600 # every 6h
-      - WATCHTOWER_HTTP_API_METRICS=true
-      - WATCHTOWER_HTTP_API_TOKEN=$HOMELAB_WATCHTOWER_KEY
-      - WATCHTOWER_NOTIFICATIONS=gotify
-      - WATCHTOWER_NOTIFICATION_GOTIFY_URL=https://gotify.local.$HOMELAB_DOMAIN
-      - WATCHTOWER_NOTIFICATION_GOTIFY_TOKEN=$HOMELAB_GOTIFY_KEY
+      WATCHTOWER_POLL_INTERVAL: 21600 # every 6h
+      WATCHTOWER_HTTP_API_METRICS: true
+      WATCHTOWER_HTTP_API_TOKEN: $HOMELAB_WATCHTOWER_KEY
+      WATCHTOWER_NOTIFICATIONS: gotify
+      WATCHTOWER_NOTIFICATION_GOTIFY_URL: https://gotify.local.$HOMELAB_DOMAIN
+      WATCHTOWER_NOTIFICATION_GOTIFY_TOKEN: $HOMELAB_GOTIFY_KEY
     labels:
       homepage.group: $HOMELAB_HOSTTITLE
       homepage.name: Watchtower
