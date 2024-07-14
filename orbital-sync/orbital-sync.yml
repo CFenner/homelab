@@ -1,0 +1,19 @@
+services:
+  orbital-sync:
+    image: mattwebbio/orbital-sync:latest
+    container_name: Orbital-Sync
+    environment:
+      PRIMARY_HOST_BASE_URL: http://$HOMELAB_PIHOLE_HOST
+      PRIMARY_HOST_PASSWORD: $HOMELAB_PIHOLE_KEY
+      SECONDARY_HOSTS_1_BASE_URL: http://$HOMELAB_SECONDARY_PIHOLE_HOST
+      SECONDARY_HOSTS_1_PASSWORD: $HOMELAB_SECONDARY_PIHOLE_KEY
+#      SECONDARY_HOSTS_2_BASE_URL:
+#      SECONDARY_HOSTS_2_PASSWORD:
+#      SECONDARY_HOSTS_3_BASE_URL:
+#      SECONDARY_HOSTS_3_PASSWORD:
+      INTERVAL_MINUTES: 60
+    labels:
+      - "homepage.group=Netzwerk"
+      - "homepage.name=Orbital Sync"
+      - "homepage.description=PiHole Synchronisation"
+      - "homepage.icon=mdi-sync"
