@@ -1,0 +1,32 @@
+services:
+  magicmirror:
+    image: karsten13/magicmirror:latest
+    container_name: MagicMirror
+    restart: unless-stopped
+    command: 
+      - npm
+      - run
+      - server
+    networks:
+      traefik:
+    volumes:
+      - /volume1/docker/magicmirror/config:/opt/magic_mirror/config
+      - /volume1/docker/magicmirror/modules:/opt/magic_mirror/modules
+      - /volume1/docker/magicmirror/css:/opt/magic_mirror/css
+    labels:
+      traefik.enable: true
+      traefik.http.routers.mirror.entrypoints: https
+      traefik.http.routers.mirror.tls: true
+      traefik.http.routers.mirror.tls.domains[0].main: local.$HOMELAB_DOMAIN
+      traefik.http.routers.mirror.tls.domains[0].sans: "*.local.$HOMELAB_DOMAIN"
+      traefik.http.routers.mirror.rule: Host(`mirror.local.$HOMELAB_DOMAIN`)
+      traefik.http.services.mirror.loadbalancer.server.port: 8080
+      homepage.group: Status
+      homepage.name: MagicMirror
+      homepage.description: Dashboard
+      homepage.icon: mdi-mirror-rectangle
+      homepage.href: https://mirror.local.$HOMELAB_DOMAIN
+networks:
+  traefik:
+    name: traefik_traefik
+    external: true
