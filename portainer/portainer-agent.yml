@@ -16,6 +16,6 @@ services:
       homepage.name: Portainer-Agent
       homepage.icon: portainer
       homepage.widget.type: portainer
-      homepage.widget.url: https://portainer.local.$HOMELAB_DOMAIN
+      homepage.widget.url: https://portainer.local.$HOMELAB_DOMAIN/#!/$HOMELAB_PORTAINER_ENV/docker/dashboard
       homepage.widget.env: $HOMELAB_PORTAINER_ENV
       homepage.widget.key: $HOMELAB_PORTAINER_KEY
