@@ -6,39 +6,54 @@ flowchart LR
 
   subgraph RPi2
     Homepage
-    traefik-rpi2[Traefik]
-    watchtower-rpi2[Watchtower]
-    syncthing-rpi2[Syncthing]
-    portainer-rpi2[Portainer-Agent]
-    pockerproxy-rpi2[Docker-Proxy]
+    Gotify
+    subgraph common-rpi2[common]
+      traefik-rpi2[Traefik]
+      watchtower-rpi2[Watchtower]
+      syncthing-rpi2[Syncthing]
+      portainer-rpi2[Portainer-Agent]
+      pockerproxy-rpi2[Docker-Proxy]
+    end
   end
 
   subgraph RPi3
     Authentik
-    traefik-rpi3[Traefik]
-    watchtower-rpi3[Watchtower]
-    syncthing-rpi3[Syncthing]
-    portainer-rpi3[Portainer-Agent]
-    pockerproxy-rpi3[Docker-Proxy]
+    Pi-Hole
+    Orbital-Sync
+    subgraph common-rpi3[common]
+      traefik-rpi3[Traefik]
+      watchtower-rpi3[Watchtower]
+      syncthing-rpi3[Syncthing]
+      portainer-rpi3[Portainer-Agent]
+      pockerproxy-rpi3[Docker-Proxy]
+    end
   end
 
   subgraph RPi4
     ha[Home Assistant]
+    subgraph common-rpi4[common]
+      portainer-rpi4[Portainer-Agent]
+    end
   end
 
   subgraph RPi5
     Paperless
-    traefik-rpi5[Traefik]
-    watchtower-rpi5[Watchtower]
-    syncthing-rpi5[Syncthing]
-    portainer-rpi5[Portainer-Agent]
-    pockerproxy-rpi5[Docker-Proxy]
+    
+    subgraph common-rpi5[common]
+      traefik-rpi5[Traefik]
+      watchtower-rpi5[Watchtower]
+      syncthing-rpi5[Syncthing]
+      portainer-rpi5[Portainer-Agent]
+      pockerproxy-rpi5[Docker-Proxy]
+    end
   end
 
   subgraph RS422+
-    Pi-Hole
+    secondary-pihole[Pi-Hole]
     Jellyfin
-    syncthing[Syncthing]
+    subgraph common-rs422[common]
+      syncthing[Syncthing]
+    end
   end
 
 ```
