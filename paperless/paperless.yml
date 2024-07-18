@@ -7,11 +7,13 @@ services:
     container_name: Paperless
     restart: unless-stopped
     depends_on:
-      - broker
+      - paperless-db
+      - paperless-broker
+    networks:
+      - default
+      - traefik
     ports:
       - "8000:8000"
-#    networks:
-#      - traefik
     volumes:
       - /home/pi/docker/paperless/data:/usr/src/paperless/data
       - /home/pi/docker/paperless/media:/usr/src/paperless/media
@@ -19,42 +21,70 @@ services:
       - /home/pi/docker/paperless/consume:/usr/src/paperless/consume
     environment:
       PAPERLESS_TIME_ZONE: Europe/Berlin
-      PAPERLESS_REDIS: redis://broker:6379
-      PAPERLESS_DBHOST: db
-# The UID and GID of the user used to run paperless in the container. Set this
-# to your UID and GID on the host so that you have write access to the
-# consumption directory.
-      UID: 1000
-      GID: 100
-      USERMAP_UID: 1000
-      USERMAP_GID: 100
+      PAPERLESS_REDIS: redis://paperless-broker:6379
+      PAPERLESS_DBHOST: paperless-db
       PAPERLESS_OCR_LANGUAGES: deu eng
       PAPERLESS_OCR_LANGUAGE: deu
-      # This is required if you will be exposing Paperless-ngx on a public domain
-      # (if doing so please consider security measures such as reverse proxy)
-      #PAPERLESS_URL=https://paperless.example.com
-      # Adjust this key if you plan to make paperless available publicly. It should
-      # be a very long sequence of random characters. You don't need to remember it.
-      #PAPERLESS_SECRET_KEY=change-me
-  broker:
+      PAPERLESS_URL: https://paperless.local.$HOMELAB_DOMAIN
+      PAPERLESS_SECRET_KEY: $HOMELAB_PAPERLESS_KEY
+      PAPERLESS_ADMIN_USER: admin
+      PAPERLESS_ADMIN_PASSWORD: admin
+      USERMAP_UID: 1000
+      USERMAP_GID: 1000
+      PUID: 1000
+      PGID: 1000
+      PAPERLESS_APPS: allauth.socialaccount.providers.openid_connect
+      PAPERLESS_SOCIALACCOUNT_PROVIDERS: >
+          {
+            "openid_connect": {
+               "APPS": [
+                {
+                  "provider_id": "authentik",
+                  "name": "Authentik",
+                  "client_id": "$HOMELAB_AUTHENTIK_CLIENT",
+                  "secret": "$HOMELAB_AUTHENTIK_SECRET",
+                  "settings": {
+                    "server_url": "https://authentik.local.$HOMELAB_DOMAIN/application/o/paperless/.well-known/openid-configuration"
+                  }
+                }
+              ],
+              "OAUTH_PKCE_ENABLED": "True"
+            }
+          }
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik_traefik
+      traefik.http.routers.paperless.entrypoints: https
+      traefik.http.routers.paperless.tls: true
+      traefik.http.routers.paperless.tls.domains[0].main: local.$HOMELAB_DOMAIN
+      traefik.http.routers.paperless.tls.domains[0].sans: '*.local.$HOMELAB_DOMAIN'
+      traefik.http.routers.paperless.rule: Host(`paperless.local.$HOMELAB_DOMAIN`)
+      traefik.http.services.paperless.loadbalancer.server.port: 8000
+      homepage.group: Dokumente
+      homepage.name: Paperless
+      homepage.icon: paperless-ngx
+      homepage.href: https://paperless.local.$HOMELAB_DOMAIN
+      homepage.widget.type: paperlessngx
+      homepage.widget.url: https://paperless.local.$HOMELAB_DOMAIN
+      # homepage.widget.username: 
+      # homepage.widget.password: 
+  paperless-broker:
     image: docker.io/library/redis:7
     container_name: Paperless-Redis
     restart: unless-stopped
     volumes:
-      - redisdata:/data
-  db:
+      - /home/pi/docker/paperless/redis:/data
+  paperless-db:
     image: docker.io/library/postgres:16
     container_name: Paperless-Postgres
     restart: unless-stopped
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - /home/pi/docker/paperless/postgres:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: paperless
       POSTGRES_USER: paperless
       POSTGRES_PASSWORD: paperless
-
-volumes:
-  data:
-  media:
-  pgdata:
-  redisdata:
+networks:
+  traefik:
+    external: true
+    name: traefik_traefik
