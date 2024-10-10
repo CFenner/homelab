@@ -71,8 +71,7 @@ services:
       homepage.href: https://paperless.local.$HOMELAB_DOMAIN
       homepage.widget.type: paperlessngx
       homepage.widget.url: https://paperless.local.$HOMELAB_DOMAIN
-      homepage.widget.username: $HOMELAB_HOMEPAGE_PAPERLESS_USERNAME
-      homepage.widget.password: $HOMELAB_HOMEPAGE_PAPERLESS_PASSWORD
+      homepage.widget.key: $HOMELAB_HOMEPAGE_PAPERLESS_TOKEN
   paperless-broker:
     image: docker.io/library/redis:7
     container_name: Paperless-Redis
