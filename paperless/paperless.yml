@@ -25,32 +25,37 @@ services:
       PAPERLESS_DBHOST: paperless-db
       PAPERLESS_OCR_LANGUAGES: deu eng
       PAPERLESS_OCR_LANGUAGE: deu
+      PAPERLESS_OCR_USER_ARGS='{"invalidate_digital_signatures": true}'
       PAPERLESS_URL: https://paperless.local.$HOMELAB_DOMAIN
       PAPERLESS_SECRET_KEY: $HOMELAB_PAPERLESS_KEY
-      PAPERLESS_ADMIN_USER: admin
-      PAPERLESS_ADMIN_PASSWORD: admin
+      PAPERLESS_ADMIN_USER: $HOMELAB_PAPERLESS_ADMIN_USERNAME
+      PAPERLESS_ADMIN_PASSWORD: $HOMELAB_PAPERLESS_ADMIN_PASSWORD
+      PAPERLESS_CONSUME_DIR: /usr/src/paperless/consume
+      # use for Synology
+      # USERMAP_UID: 1026
+      # USERMAP_GID: 100
       USERMAP_UID: 1000
       USERMAP_GID: 1000
       PUID: 1000
       PGID: 1000
-      PAPERLESS_APPS: allauth.socialaccount.providers.openid_connect
-      PAPERLESS_SOCIALACCOUNT_PROVIDERS: >
-          {
-            "openid_connect": {
-               "APPS": [
-                {
-                  "provider_id": "authentik",
-                  "name": "Authentik",
-                  "client_id": "$HOMELAB_AUTHENTIK_CLIENT",
-                  "secret": "$HOMELAB_AUTHENTIK_SECRET",
-                  "settings": {
-                    "server_url": "https://authentik.local.$HOMELAB_DOMAIN/application/o/paperless/.well-known/openid-configuration"
-                  }
-                }
-              ],
-              "OAUTH_PKCE_ENABLED": "True"
-            }
-          }
+      # PAPERLESS_APPS: allauth.socialaccount.providers.openid_connect
+      # PAPERLESS_SOCIALACCOUNT_PROVIDERS: >
+      #     {
+      #       "openid_connect": {
+      #         "APPS": [
+      #           {
+      #             "provider_id": "authentik",
+      #             "name": "Authentik",
+      #             "client_id": "$HOMELAB_AUTHENTIK_CLIENT",
+      #             "secret": "$HOMELAB_AUTHENTIK_SECRET",
+      #             "settings": {
+      #               "server_url": "https://authentik.local.$HOMELAB_DOMAIN/application/o/paperless/.well-known/openid-configuration"
+      #             }
+      #           }
+      #         ],
+      #         "OAUTH_PKCE_ENABLED": "True"
+      #       }
+      #     }
     labels:
       traefik.enable: true
       traefik.docker.network: traefik_traefik
@@ -66,8 +71,8 @@ services:
       homepage.href: https://paperless.local.$HOMELAB_DOMAIN
       homepage.widget.type: paperlessngx
       homepage.widget.url: https://paperless.local.$HOMELAB_DOMAIN
-      # homepage.widget.username: 
-      # homepage.widget.password: 
+      homepage.widget.username: $HOMELAB_HOMEPAGE_PAPERLESS_USERNAME
+      homepage.widget.password: $HOMELAB_HOMEPAGE_PAPERLESS_PASSWORD
   paperless-broker:
     image: docker.io/library/redis:7
     container_name: Paperless-Redis
