@@ -4,7 +4,7 @@ name: portainer
 services:
   portainer:
     image: portainer/agent:latest
-    container_name: Portainer-Agent
+    container_name: Portainer
     restart: always
     ports:
       - 9001:9001
