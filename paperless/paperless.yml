@@ -46,8 +46,8 @@ services:
                 {
                   "provider_id": "authentik",
                   "name": "Authentik",
-                  "client_id": "$HOMELAB_PAPERLESS_AUTHENTIK_CLIENT",
-                  "secret": "$HOMELAB_PAPERLESS_AUTHENTIK_SECRET",
+                  "client_id": "$HOMELAB_AUTHENTIK_CLIENT",
+                  "secret": "$HOMELAB_AUTHENTIK_SECRET",
                   "settings": {
                     "server_url": "https://authentik.local.$HOMELAB_DOMAIN/application/o/paperless/.well-known/openid-configuration"
                   }
