@@ -38,24 +38,24 @@ services:
       USERMAP_GID: 1000
       PUID: 1000
       PGID: 1000
-      # PAPERLESS_APPS: allauth.socialaccount.providers.openid_connect
-      # PAPERLESS_SOCIALACCOUNT_PROVIDERS: >
-      #     {
-      #       "openid_connect": {
-      #         "APPS": [
-      #           {
-      #             "provider_id": "authentik",
-      #             "name": "Authentik",
-      #             "client_id": "$HOMELAB_AUTHENTIK_CLIENT",
-      #             "secret": "$HOMELAB_AUTHENTIK_SECRET",
-      #             "settings": {
-      #               "server_url": "https://authentik.local.$HOMELAB_DOMAIN/application/o/paperless/.well-known/openid-configuration"
-      #             }
-      #           }
-      #         ],
-      #         "OAUTH_PKCE_ENABLED": "True"
-      #       }
-      #     }
+      PAPERLESS_APPS: allauth.socialaccount.providers.openid_connect
+      PAPERLESS_SOCIALACCOUNT_PROVIDERS: >
+          {
+            "openid_connect": {
+              "APPS": [
+                {
+                  "provider_id": "authentik",
+                  "name": "Authentik",
+                  "client_id": "$HOMELAB_PAPERLESS_AUTHENTIK_CLIENT",
+                  "secret": "$HOMELAB_PAPERLESS_AUTHENTIK_SECRET",
+                  "settings": {
+                    "server_url": "https://authentik.local.$HOMELAB_DOMAIN/application/o/paperless/.well-known/openid-configuration"
+                  }
+                }
+              ],
+              "OAUTH_PKCE_ENABLED": "True"
+            }
+          }
     labels:
       traefik.enable: true
       traefik.docker.network: traefik_traefik
