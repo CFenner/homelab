@@ -1,0 +1,67 @@
+name: semaphore
+services:
+  semaphore:
+    image: semaphoreui/semaphore:latest
+    container_name: Semaphore
+    restart: unless-stopped
+    networks:
+      default:
+      traefik:
+    environment:
+      # use for Synology
+      USERMAP_UID: 1026
+      USERMAP_GID: 100
+      SEMAPHORE_ADMIN: $HOMELAB_SEMAPHORE_ADMIN_USERNAME
+      SEMAPHORE_ADMIN_PASSWORD: $HOMELAB_SEMAPHORE_ADMIN_PASSWORD
+#     SEMAPHORE_ADMIN_NAME: Admin
+#     SEMAPHORE_ADMIN_EMAIL: admin@localhost
+      SEMAPHORE_DB: semaphore
+      SEMAPHORE_DB_USER: semaphore
+      SEMAPHORE_DB_PASS: $HOMELAB_SEMAPHORE_POSTGRES_PASSWORD
+      SEMAPHORE_DB_HOST: postgres
+      SEMAPHORE_DB_PORT: 5432
+      SEMAPHORE_DB_DIALECT: postgres
+      SEMAPHORE_PLAYBOOK_PATH: /playbooks/
+      SEMAPHORE_WEB_ROOT: / # necessary for successful authentik redirect
+      SEMAPHORE_ACCESS_KEY_ENCRYPTION: $HOMELAB_SEMAPHORE_KEY
+      SEMAPHORE_GOTIFY_ALERT: True
+      SEMAPHORE_GOTIFY_URL: https://gotify.local.$HOMELAB_DOMAIN
+      SEMAPHORE_GOTIFY_TOKEN: $HOMELAB_GOTIFY_KEY
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik_traefik
+      traefik.http.routers.semaphore.entrypoints: https
+      traefik.http.routers.semaphore.tls: true
+      traefik.http.routers.semaphore.tls.domains[0].main: local.$HOMELAB_DOMAIN
+      traefik.http.routers.semaphore.tls.domains[0].sans: '*.local.$HOMELAB_DOMAIN'
+      traefik.http.routers.semaphore.rule: Host(`semaphore.local.$HOMELAB_DOMAIN`)
+      traefik.http.services.semaphore.loadbalancer.server.port: 3000
+      homepage.group: Services
+      homepage.name: SemaphoreUI
+      homepage.description: Automation
+      homepage.icon: semaphore
+      homepage.href: https://semaphore.local.$HOMELAB_DOMAIN
+    volumes: 
+      - /etc/localtime:/etc/localtime:ro
+      - /volume1/docker/semaphore/data:/var/lib/semaphore
+      - /volume1/docker/semaphore/config:/etc/semaphore
+      - /volume1/docker/semaphore/inventory:/inventory
+      - /volume1/docker/semaphore/playbooks:/playbooks
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:14
+    container_name: Semaphore-Postgres
+    restart: unless-stopped
+    volumes: 
+      - /etc/localtime:/etc/localtime:ro
+      - /volume1/docker/semaphore/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: semaphore
+      POSTGRES_USER: semaphore
+      POSTGRES_PASSWORD: $HOMELAB_SEMAPHORE_POSTGRES_PASSWORD
+networks:
+  default:
+  traefik:
+    external: true
+    name: traefik_traefik
