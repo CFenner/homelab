@@ -17,7 +17,6 @@ flowchart LR
   end
 
   subgraph RPi3
-    Authentik
     Pi-Hole
     Orbital-Sync
     subgraph common-rpi3[common]
@@ -37,6 +36,7 @@ flowchart LR
   end
 
   subgraph RPi5
+    Authentik
     Paperless
     
     subgraph common-rpi5[common]
