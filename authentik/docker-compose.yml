@@ -1,0 +1,114 @@
+services:
+  authentik-server:
+    image: ghcr.io/goauthentik/server:2024.12.1
+    container_name: Authentik
+    restart: unless-stopped
+    networks:
+      default:
+      traefik:
+    command: server
+    user: root
+    environment:
+      AUTHENTIK_REDIS__HOST: authentik-broker
+      AUTHENTIK_POSTGRESQL__HOST: authentik-db
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: $HOMELAB_AUTHENTIK_PASSWORD
+      AUTHENTIK_SECRET_KEY: $HOMELAB_AUTHENTIK_KEY
+      AUTHENTIK_INSECURE: true
+      AUTHENTIK_ERROR_REPORTING__ENABLED: true
+#      - PUID=1000
+#      - PGID=1000
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /home/pi/docker/authentik/media:/media
+      - /home/pi/docker/authentik/templates:/templates
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik_traefik
+      traefik.http.routers.authentik.entrypoints: https
+      traefik.http.routers.authentik.tls: true
+      traefik.http.routers.authentik.tls.domains[0].main: local.$HOMELAB_DOMAIN
+      traefik.http.routers.authentik.tls.domains[0].sans: *.local.$HOMELAB_DOMAIN
+      traefik.http.routers.authentik.rule: Host(`authentik.local.$HOMELAB_DOMAIN`)
+      traefik.http.services.authentik.loadbalancer.server.port: 9000
+      homepage.group: Services
+      homepage.name: Authentik
+      homepage.description: Single Sign-on
+      homepage.icon: authentik
+      homepage.href: https://authentik.local.$HOMELAB_DOMAIN
+      homepage.widget.type: authentik
+      homepage.widget.url: https://authentik.local.$HOMELAB_DOMAIN
+      homepage.widget.key: $HOMELAB_HOMEPAGE_AUTHENTIK_TOKEN
+    depends_on:
+      authentik-db:
+        condition: service_healthy
+      authentik-broker:
+        condition: service_healthy
+  authentik-worker:
+    image: ghcr.io/goauthentik/server:2024.12.1
+    container_name: Authentik-Worker
+    restart: unless-stopped
+    networks:
+      default:
+    command: worker
+    user: root
+    environment:
+      AUTHENTIK_REDIS__HOST: authentik-broker
+      AUTHENTIK_POSTGRESQL__HOST: authentik-db
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: $HOMELAB_AUTHENTIK_PASSWORD
+      AUTHENTIK_SECRET_KEY: $HOMELAB_AUTHENTIK_KEY
+#      - PUID=1000
+#      - PGID=1000
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /home/pi/docker/authentik/media:/media
+      - /home/pi/docker/authentik/certs:/certs
+      - /home/pi/docker/authentik/templates:/templates
+    depends_on:
+      authentik-db:
+        condition: service_healthy
+      authentik-broker:
+        condition: service_healthy
+  authentik-db:
+    image: docker.io/library/postgres:16-alpine
+    container_name: Authentik-Postgres
+    restart: unless-stopped
+#    user: "1000:1000"
+    environment:
+      POSTGRES_DB: authentik
+      POSTGRES_USER: authentik
+      POSTGRES_PASSWORD: $HOMELAB_AUTHENTIK_PASSWORD
+#      - PUID=1000
+#      - PGID=1000
+#      - USERMAP_UID=1000
+#      - USERMAP_GID=1000
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d authentik -U authentik"]
+      start_period: 30s
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /home/pi/docker/authentik/postgres:/var/lib/postgresql/data
+  authentik-broker:
+    image: docker.io/library/redis:alpine
+    container_name: Authentik-Redis
+    restart: unless-stopped
+    command: --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 3s
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /home/pi/docker/authentik/redis:/data
+networks:
+  traefik:
+    external: true
+    name: traefik_traefik
