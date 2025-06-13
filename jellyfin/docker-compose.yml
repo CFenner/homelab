@@ -1,0 +1,35 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: Jellyfin
+    restart: unless-stopped
+    networks:
+      traefik:
+    environment:
+      - JELLYFIN_PublishedServerUrl=https://jellyfin.local.$HOMELAB_DOMAIN
+    volumes:
+      - /volume1/docker/jellyfin/config:/config
+      - /volume1/docker/jellyfin/cache:/cache
+      - /volume1/Media:/media
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+      - "traefik.http.routers.jellyfin.entrypoints=https"
+      - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.local.$HOMELAB_DOMAIN`)"
+      - "traefik.http.routers.jellyfin.tls=true"
+      - "traefik.http.routers.jellyfin.tls.domains[0].main=local.$HOMELAB_DOMAIN"
+      - "traefik.http.routers.jellyfin.tls.domains[0].sans=*.local.$HOMELAB_DOMAIN"
+      - "homepage.group=Media"
+      - "homepage.name=Jellyfin"
+      - "homepage.icon=jellyfin"
+      - "homepage.href=https://jellyfin.local.$HOMELAB_DOMAIN"
+      - "homepage.widget.type=jellyfin"
+      - "homepage.widget.url=https://jellyfin.local.$HOMELAB_DOMAIN"
+      - "homepage.widget.key=$HOMELAB_HOMEPAGE_JELLYFIN_TOKEN"
+      - "homepage.widget.enableUser=true"
+      - "homepage.widget.showEpisodeNumber=true"
+networks:
+  traefik:
+    external: true
+    name: traefik_traefik
