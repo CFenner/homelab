@@ -12,19 +12,20 @@ flowchart LR
       watchtower-rpi2[Watchtower]
       syncthing-rpi2[Syncthing]
       portainer-rpi2[Portainer-Agent]
-      pockerproxy-rpi2[Docker-Proxy]
+      dockerproxy-rpi2[Docker-Proxy]
     end
   end
 
   subgraph RPi3
     Pi-Hole
     Orbital-Sync
+    EVCC
     subgraph common-rpi3[common]
       traefik-rpi3[Traefik]
       watchtower-rpi3[Watchtower]
       syncthing-rpi3[Syncthing]
       portainer-rpi3[Portainer-Agent]
-      pockerproxy-rpi3[Docker-Proxy]
+      dockerproxy-rpi3[Docker-Proxy]
     end
   end
 
@@ -44,7 +45,7 @@ flowchart LR
       watchtower-rpi5[Watchtower]
       syncthing-rpi5[Syncthing]
       portainer-rpi5[Portainer-Agent]
-      pockerproxy-rpi5[Docker-Proxy]
+      dockerproxy-rpi5[Docker-Proxy]
     end
   end
 
