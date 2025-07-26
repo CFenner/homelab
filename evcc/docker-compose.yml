@@ -1,6 +1,8 @@
 name: evcc
 services:
   evcc:
+    healthcheck:
+      disable: true
     image: evcc/evcc:latest
     container_name: EVCC
     restart: unless-stopped
