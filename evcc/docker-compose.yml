@@ -1,0 +1,33 @@
+name: evcc
+services:
+  evcc:
+    image: evcc/evcc:latest
+    container_name: EVCC
+    restart: unless-stopped
+    networks:
+      traefik:
+    ports:
+      - 7070:7070/tcp
+      - 8887:8887/tcp
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik_traefik
+      traefik.http.routers.evcc.entrypoints: https
+      traefik.http.routers.evcc.tls: true
+      traefik.http.routers.evcc.tls.domains[0].main: local.$HOMELAB_DOMAIN
+      traefik.http.routers.evcc.tls.domains[0].sans: '*.local.$HOMELAB_DOMAIN'
+      traefik.http.routers.evcc.rule: Host(`evcc.local.$HOMELAB_DOMAIN`)
+      traefik.http.services.evcc.loadbalancer.server.port: 7070
+      homepage.group: Services
+      homepage.name: EVCC
+      homepage.description: Charging Control
+      homepage.icon: evcc
+      homepage.href: https://semaphore.local.$HOMELAB_DOMAIN
+    volumes: 
+      - /etc/localtime:/etc/localtime:ro
+      - /home/pi/docker/evcc/evcc.yaml:/etc/
+      - /home/pi/docker/evcc/.evcc:/root/.evcc
+networks:
+  traefik:
+    external: true
+    name: traefik_traefik
