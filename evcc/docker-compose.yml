@@ -1,8 +1,6 @@
 name: evcc
 services:
   evcc:
-    healthcheck:
-      disable: true
     image: evcc/evcc:latest
     container_name: EVCC
     restart: unless-stopped
@@ -10,7 +8,7 @@ services:
       - traefik
     ports:
       - 7070:7070/tcp # Web UI
-      - 8887:8887/tcp
+      - 8887:8887/tcp # OCPP charger
     volumes:
       - /home/pi/docker/evcc/evcc.yaml:/etc/evcc.yaml
       - /home/pi/docker/evcc/.evcc:/root/.evcc
@@ -22,6 +20,12 @@ services:
       traefik.http.routers.evcc.tls.domains[0].sans: "*.local.$HOMELAB_DOMAIN"
       traefik.http.routers.evcc.rule: Host(`evcc.local.$HOMELAB_DOMAIN`)
       traefik.http.services.evcc.loadbalancer.server.port: 7070
+      traefik.http.routers.ocpp.entrypoints: https
+      traefik.http.routers.ocpp.tls: true
+      traefik.http.routers.ocpp.tls.domains[0].main: local.$HOMELAB_DOMAIN
+      traefik.http.routers.ocpp.tls.domains[0].sans: "*.local.$HOMELAB_DOMAIN"
+      traefik.http.routers.ocpp.rule: Host(`ocpp.local.$HOMELAB_DOMAIN`)
+      traefik.http.services.ocpp.loadbalancer.server.port: 8887
       homepage.group: Services
       homepage.name: EVCC
       homepage.description: Charging Control
