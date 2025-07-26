@@ -19,12 +19,14 @@ services:
       traefik.http.routers.evcc.tls.domains[0].main: local.$HOMELAB_DOMAIN
       traefik.http.routers.evcc.tls.domains[0].sans: "*.local.$HOMELAB_DOMAIN"
       traefik.http.routers.evcc.rule: Host(`evcc.local.$HOMELAB_DOMAIN`)
+      traefik.http.routers.evcc.service: evcc
       traefik.http.services.evcc.loadbalancer.server.port: 7070
       traefik.http.routers.ocpp.entrypoints: https
       traefik.http.routers.ocpp.tls: true
       traefik.http.routers.ocpp.tls.domains[0].main: local.$HOMELAB_DOMAIN
       traefik.http.routers.ocpp.tls.domains[0].sans: "*.local.$HOMELAB_DOMAIN"
       traefik.http.routers.ocpp.rule: Host(`ocpp.local.$HOMELAB_DOMAIN`)
+      traefik.http.routers.ocpp.service: ocpp
       traefik.http.services.ocpp.loadbalancer.server.port: 8887
       homepage.group: Services
       homepage.name: EVCC
