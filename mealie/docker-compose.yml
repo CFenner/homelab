@@ -5,8 +5,8 @@ services:
     restart: unless-stopped
     networks:
       - traefik
-    ports:
-      - "9925:9000"
+#    ports:
+#      - "9925:9000"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /volume1/docker/mealie/:/app/data/
@@ -44,7 +44,7 @@ services:
       traefik.http.routers.mealie.tls.domains[0].main: local.$HOMELAB_DOMAIN
       traefik.http.routers.mealie.tls.domains[0].sans: '*.local.$HOMELAB_DOMAIN'
       traefik.http.routers.mealie.rule: Host(`mealie.local.$HOMELAB_DOMAIN`)
-      traefik.http.services.mealie.loadbalancer.server.port: 9000
+      traefik.http.services.mealie.loadbalancer.server.port: 9925
       homepage.group: Services
       homepage.name: Mealie
       homepage.description: Meal Organizer
