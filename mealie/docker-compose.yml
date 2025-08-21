@@ -5,6 +5,8 @@ services:
     restart: unless-stopped
     networks:
       - traefik
+    ports:
+      - "9925:9000"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /volume1/docker/mealie/:/app/data/
