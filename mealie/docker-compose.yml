@@ -1,28 +1,31 @@
 services:
   mealie:
-    container_name: mealie
-    image: mealie:dev
-    build:
-      context: ../
-      target: production
-      dockerfile: ./docker/Dockerfile
-    restart: always
+    image: ghcr.io/mealie-recipes/mealie:latest
+    container_name: Mealie
+    restart: unless-stopped
+    networks:
+      - traefik
     volumes:
-      - mealie-data:/app/data/
-    ports:
-      - 9091:9000
+      - /etc/localtime:/etc/localtime:ro
+      - /volume1/docker/mealie/:/app/data/
     environment:
       ALLOW_SIGNUP: "false"
       LOG_LEVEL: "DEBUG"
-
-      DB_ENGINE: sqlite # Optional: 'sqlite', 'postgres'
-      # =====================================
-      # Postgres Config
-      POSTGRES_USER: mealie
-      POSTGRES_PASSWORD: mealie
-      POSTGRES_SERVER: postgres
-      POSTGRES_PORT: 5432
-      POSTGRES_DB: mealie
+#      PUID: 1026
+#      PGID: 1026
+      BASE_URL: https://mealie.local.$HOMELAB_DOMAIN
+      OIDC_AUTH_ENABLED: true
+      OIDC_PROVIDER_NAME: authentik
+      OIDC_SIGNUP_ENABLED: true
+      OIDC_CONFIGURATION_URL: https://authentik.local.$HOMELAB_DOMAIN/application/o/mealie/.well-known/openid-configuration
+      OIDC_CLIENT_ID: $HOMELAB_AUTHENTIK_CLIENT_ID
+      OIDC_CLIENT_SECRET: $HOMELAB_AUTHENTIK_CLIENT_SECRET
+      #OIDC_USER_GROUP= mealie-users
+      OIDC_ADMIN_GROUP: mealie-admins
+      OIDC_AUTO_REDIRECT: true
+      OIDC_REMEMBER_ME: true
+      
+      #DB_ENGINE: sqlite # Optional: 'sqlite', 'postgres'
       # =====================================
       # Email Configuration
       # SMTP_HOST=
@@ -32,7 +35,26 @@ services:
       # SMTP_FROM_EMAIL=
       # SMTP_USER=
       # SMTP_PASSWORD=
+    labels:
+      traefik.enable: true
+      traefik.http.routers.mealie.entrypoints: https
+      traefik.http.routers.mealie.tls: true
+      traefik.http.routers.mealie.tls.domains[0].main: local.$HOMELAB_DOMAIN
+      traefik.http.routers.mealie.tls.domains[0].sans: *.local.$HOMELAB_DOMAIN
+      traefik.http.routers.mealie.rule: Host(`mealie.local.$HOMELAB_DOMAIN`)
+      traefik.http.services.mealie.loadbalancer.server.port: 9091
+      homepage.group: Services
+      homepage.name: Mealie
+      homepage.description: Meal Organizer
+      homepage.icon: mealie
+      homepage.href: https://mealie.local.$HOMELAB_DOMAIN
+      homepage.widget.type: mealie
+      homepage.widget.url: https://mealie.local.$HOMELAB_DOMAIN
+      homepage.widget.key: $HOMELAB_HOMEPAGE_MEALIE_TOKEN
+      homepage.widget.version: 2
 
-volumes:
-  mealie-data:
-    driver: local
+networks:
+  traefik:
+    external: true
+    name: traefik_traefik
+  
