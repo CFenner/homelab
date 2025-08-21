@@ -18,14 +18,14 @@ services:
       OIDC_PROVIDER_NAME: authentik
       OIDC_SIGNUP_ENABLED: true
       OIDC_CONFIGURATION_URL: https://authentik.local.$HOMELAB_DOMAIN/application/o/mealie/.well-known/openid-configuration
-      OIDC_CLIENT_ID: $HOMELAB_AUTHENTIK_CLIENT_ID
-      OIDC_CLIENT_SECRET: $HOMELAB_AUTHENTIK_CLIENT_SECRET
+      OIDC_CLIENT_ID: $HOMELAB_AUTHENTIK_CLIENT
+      OIDC_CLIENT_SECRET: $HOMELAB_AUTHENTIK_SECRET
       #OIDC_USER_GROUP= mealie-users
       OIDC_ADMIN_GROUP: mealie-admins
       OIDC_AUTO_REDIRECT: true
       OIDC_REMEMBER_ME: true
       
-      #DB_ENGINE: sqlite # Optional: 'sqlite', 'postgres'
+      # DB_ENGINE: sqlite # Optional: 'sqlite', 'postgres'
       # =====================================
       # Email Configuration
       # SMTP_HOST=
@@ -40,7 +40,7 @@ services:
       traefik.http.routers.mealie.entrypoints: https
       traefik.http.routers.mealie.tls: true
       traefik.http.routers.mealie.tls.domains[0].main: local.$HOMELAB_DOMAIN
-      traefik.http.routers.mealie.tls.domains[0].sans: *.local.$HOMELAB_DOMAIN
+      traefik.http.routers.mealie.tls.domains[0].sans: '*.local.$HOMELAB_DOMAIN'
       traefik.http.routers.mealie.rule: Host(`mealie.local.$HOMELAB_DOMAIN`)
       traefik.http.services.mealie.loadbalancer.server.port: 9091
       homepage.group: Services
@@ -57,4 +57,3 @@ networks:
   traefik:
     external: true
     name: traefik_traefik
-  
