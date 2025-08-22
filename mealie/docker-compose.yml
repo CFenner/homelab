@@ -44,7 +44,7 @@ services:
       traefik.http.routers.mealie.tls.domains[0].main: local.$HOMELAB_DOMAIN
       traefik.http.routers.mealie.tls.domains[0].sans: '*.local.$HOMELAB_DOMAIN'
       traefik.http.routers.mealie.rule: Host(`mealie.local.$HOMELAB_DOMAIN`)
-      traefik.http.services.mealie.loadbalancer.server.port: 9925
+      traefik.http.services.mealie.loadbalancer.server.port: 9000
       homepage.group: Services
       homepage.name: Mealie
       homepage.description: Meal Organizer
