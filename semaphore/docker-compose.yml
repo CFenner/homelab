@@ -21,6 +21,21 @@ services:
       SEMAPHORE_DB_HOST: postgres
       SEMAPHORE_DB_PORT: 5432
       SEMAPHORE_DB_DIALECT: postgres
+      SEMAPHORE_OIDC_PROVIDERS: >
+        {
+          "authentik": {
+            "display_name": "Authentik",
+            "provider_url": "https://authentik.local.$HOMELAB_DOMAIN",
+            "client_id": "$HOMELAB_AUTHENTIK_CLIENT",
+            "client_secret": "$HOMELAB_AUTHENTIK_SECRET",
+            "redirect_url": "https://semaphore.local.$HOMELAB_DOMAIN/api/auth/oidc/authentik/redirect",
+            "scopes": ["openid", "profile", "email"],
+            "username_claim": "preferred_username",
+            "email_claim": "email",
+            "name_claim": "name",
+            "order": 1
+          }
+        }
       SEMAPHORE_PLAYBOOK_PATH: /playbooks/
       SEMAPHORE_WEB_ROOT: / # necessary for successful authentik redirect
       SEMAPHORE_ACCESS_KEY_ENCRYPTION: $HOMELAB_SEMAPHORE_KEY
