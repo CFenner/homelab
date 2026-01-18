@@ -50,8 +50,9 @@ flowchart LR
   end
 
   subgraph RS422+
-    secondary-pihole[Pi-Hole]
     Jellyfin
+    secondary-pihole[Pi-Hole]
+    Semaphore
     subgraph common-rs422[common]
       syncthing[Syncthing]
     end
