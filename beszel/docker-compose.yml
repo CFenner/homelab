@@ -1,0 +1,58 @@
+# from https://beszel.dev/guide/hub-installation#docker-or-podman
+
+name: beszel
+services:
+  beszel:
+    image: henrygd/beszel:latest
+    container_name: Beszel
+    restart: unless-stopped
+    networks:
+      - traefik
+    ports:
+      - 8090:8090
+    volumes:
+      - /home/pi/docker/beszel/data:/beszel_data
+      - /home/pi/docker/beszel/socket:/beszel_socket
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      APP_URL: https://beszel.local.$HOMELAB_DOMAIN # URL of the web UI.
+      DISABLE_PASSWORD_AUTH: true # Disables password authentication.
+      SHARE_ALL_SYSTEMS: true # Allows access to all systems by all users.
+      USER_CREATION: true # Enables automatic user creation for OAuth2 / OIDC.
+#      USER_EMAIL: # Create first user with this email.
+#      USER_PASSWORD: # Create first user with this password.
+    labels:
+      homepage.group: Services
+      homepage.name: Beszel
+      homepage.description: Monitoring
+      homepage.icon: beszel
+      homepage.href: https://beszel.local.$HOMELAB_DOMAIN
+#      homepage.widget.type: beszel
+#      homepage.widget.url: https://beszel.local.$HOMELAB_DOMAIN
+#      homepage.widget.username: $HOMELAB_HOMEPAGE_BESZEL_USERNAME
+#      homepage.widget.password: $HOMELAB_HOMEPAGE_BESZEL_PASSWORD
+      traefik.enable: true
+      traefik.http.routers.beszel.entrypoints: https
+      traefik.http.routers.beszel.tls: true
+      traefik.http.routers.beszel.tls.domains[0].main: local.$HOMELAB_DOMAIN
+      traefik.http.routers.beszel.tls.domains[0].sans: "*.local.$HOMELAB_DOMAIN"
+      traefik.http.routers.beszel.rule: Host(`beszel.local.$HOMELAB_DOMAIN`)
+      traefik.http.services.beszel.loadbalancer.server.port: 8090
+  beszel-agent:
+    image: henrygd/beszel-agent:latest
+    container_name: Beszel-Agent
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /home/pi/docker/beszel/agent-data:/var/lib/beszel-agent
+      - /home/pi/docker/beszel/socket:/beszel_socket
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      LISTEN: /beszel_socket/beszel.sock
+      HUB_URL: http://localhost:8090
+      KEY: HOMELAB_BESZEL_KEY
+      TOKEN: HOMELAB_BESZEL_TOKEN
+networks:
+  traefik:
+    external: true
+    name: traefik_traefik
