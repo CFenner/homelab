@@ -28,9 +28,9 @@ services:
       homepage.icon: beszel
       homepage.href: https://beszel.local.$HOMELAB_DOMAIN
 #      homepage.widget.type: beszel
-#      homepage.widget.url: https://gotify.local.$HOMELAB_DOMAIN
-#      homepage.widget.username:
-#      homepage.widget.password:
+#      homepage.widget.url: https://beszel.local.$HOMELAB_DOMAIN
+#      homepage.widget.username: $HOMELAB_HOMEPAGE_BESZEL_USERNAME
+#      homepage.widget.password: $HOMELAB_HOMEPAGE_BESZEL_PASSWORD
       traefik.enable: true
       traefik.http.routers.beszel.entrypoints: https
       traefik.http.routers.beszel.tls: true
@@ -50,8 +50,8 @@ services:
     environment:
       LISTEN: /beszel_socket/beszel.sock
       HUB_URL: http://localhost:8090
-      TOKEN: token
-      KEY: key
+      KEY: HOMELAB_BESZEL_KEY
+      TOKEN: HOMELAB_BESZEL_TOKEN
 networks:
   traefik:
     external: true
