@@ -50,8 +50,8 @@ services:
     environment:
       LISTEN: /beszel_socket/beszel.sock
       HUB_URL: http://localhost:8090
-      KEY: HOMELAB_BESZEL_KEY
-      TOKEN: HOMELAB_BESZEL_TOKEN
+      KEY: $HOMELAB_BESZEL_KEY
+      TOKEN: $HOMELAB_BESZEL_TOKEN
 networks:
   traefik:
     external: true
