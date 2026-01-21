@@ -8,8 +8,6 @@ services:
     restart: unless-stopped
     networks:
       - traefik
-    ports:
-      - 8090:8090
     volumes:
       - /home/pi/docker/beszel/data:/beszel_data
       - /home/pi/docker/beszel/socket:/beszel_socket
@@ -47,9 +45,10 @@ services:
       - /home/pi/docker/beszel/agent-data:/var/lib/beszel-agent
       - /home/pi/docker/beszel/socket:/beszel_socket
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
     environment:
       LISTEN: /beszel_socket/beszel.sock
-      HUB_URL: http://localhost:8090
+      HUB_URL: https://beszel.local.$HOMELAB_DOMAIN
       KEY: $HOMELAB_BESZEL_KEY
       TOKEN: $HOMELAB_BESZEL_TOKEN
 networks:
