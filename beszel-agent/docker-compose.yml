@@ -1,0 +1,16 @@
+name: beszel
+services:
+  beszel-agent:
+    image: henrygd/beszel-agent
+    container_name: Beszel-Agent
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /home/pi/docker/beszel/agent-data:/var/lib/beszel-agent
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      LISTEN: $HOMELAB_BESZEL_PORT
+      HUB_URL: https://beszel.local.$HOMELAB_DOMAIN
+      TOKEN: $HOMELAB_BESZEL_TOKEN
+      KEY: $HOMELAB_BESZEL_KEY
