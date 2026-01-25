@@ -14,7 +14,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     environment:
       APP_URL: https://beszel.local.$HOMELAB_DOMAIN # URL of the web UI.
-      CSP: "default-src 'self'; frame-ancestors *"
+      CSP: "default-src 'self'; script-src 'self' 'unsafe-inline'; frame-ancestors *"
       DISABLE_PASSWORD_AUTH: true # Disables password authentication.
       SHARE_ALL_SYSTEMS: true # Allows access to all systems by all users.
       USER_CREATION: true # Enables automatic user creation for OAuth2 / OIDC.
