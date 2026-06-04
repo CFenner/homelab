@@ -5,7 +5,7 @@ services:
     container_name: Scanopy
     restart: unless-stopped
     networks:
-#      - scanopy
+      - default
       - traefik
     volumes:
       - /home/pi/docker/scanopy/data:/data
