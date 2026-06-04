@@ -18,12 +18,12 @@ services:
     labels:
       traefik.enable: true
       traefik.docker.network: traefik_traefik
-      traefik.http.routers.paperless.entrypoints: https
-      traefik.http.routers.paperless.tls: true
-      traefik.http.routers.paperless.tls.domains[0].main: local.$HOMELAB_DOMAIN
-      traefik.http.routers.paperless.tls.domains[0].sans: '*.local.$HOMELAB_DOMAIN'
-      traefik.http.routers.paperless.rule: Host(`scanopy.local.$HOMELAB_DOMAIN`)
-      traefik.http.services.paperless.loadbalancer.server.port: 60072
+      traefik.http.routers.scanopy.entrypoints: https
+      traefik.http.routers.scanopy.tls: true
+      traefik.http.routers.scanopy.tls.domains[0].main: local.$HOMELAB_DOMAIN
+      traefik.http.routers.scanopy.tls.domains[0].sans: '*.local.$HOMELAB_DOMAIN'
+      traefik.http.routers.scanopy.rule: Host(`scanopy.local.$HOMELAB_DOMAIN`)
+      traefik.http.services.scanopy.loadbalancer.server.port: 60072
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
