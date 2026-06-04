@@ -1,17 +1,18 @@
 name: scanopy
 services:
   scanopy-daemon:
-    image: ghcr.io/scanopy/scanopy/daemon:latest
-    container_name: scanopy-daemon
+    image: ghcr.io/scanopy/scanopy/daemon
+    container_name: Scanopy-Daemon
+    restart: unless-stopped
     network_mode: host
     privileged: true
-    restart: unless-stopped
     volumes:
-#      - daemon-config:/root/.config/scanopy/daemon
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+#      - daemon-config:/root/.config/scanopy/daemon
 #      - /var/log/scanopy:/var/log/scanopy
     environment:
-      SCANOPY_SERVER_URL: http://scanopy.local.$HOMELAB_DOMAIN:60072
+      SCANOPY_SERVER_URL: https://scanopy.local.$HOMELAB_DOMAIN
       SCANOPY_NETWORK_ID: $HOMELAB_SCANOPY_NETWORK_ID
       SCANOPY_DAEMON_API_KEY: $HOMELAB_SCANOPY_DAEMON_API_KEY
       SCANOPY_USER_ID: $HOMELAB_SCANOPY_USER_ID
