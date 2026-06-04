@@ -1,4 +1,5 @@
 name: scanopy
+services:
   scanopy:
     image: ghcr.io/scanopy/scanopy/server
     container_name: Scanopy
