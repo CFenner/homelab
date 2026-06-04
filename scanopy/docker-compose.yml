@@ -1,0 +1,58 @@
+name: scanopy
+  scanopy:
+    image: ghcr.io/scanopy/scanopy/server
+    container_name: Scanopy
+    restart: unless-stopped
+    networks:
+#      - scanopy
+      - traefik
+    volumes:
+      - /home/pi/docker/scanopy/data:/data
+    environment:
+      SCANOPY_LOG_LEVEL: ${SCANOPY_LOG_LEVEL:-info}
+      SCANOPY_DATABASE_URL: postgresql://scanopy:scanopy@postgres:5432/scanopy
+      SCANOPY_WEB_EXTERNAL_PATH: /app/static
+      SCANOPY_PUBLIC_URL: https://scanopy.local.$HOMELAB_DOMAIN
+#      SCANOPY_INTEGRATED_DAEMON_URL: http://host.docker.internal:60073
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik_traefik
+      traefik.http.routers.paperless.entrypoints: https
+      traefik.http.routers.paperless.tls: true
+      traefik.http.routers.paperless.tls.domains[0].main: local.$HOMELAB_DOMAIN
+      traefik.http.routers.paperless.tls.domains[0].sans: '*.local.$HOMELAB_DOMAIN'
+      traefik.http.routers.paperless.rule: Host(`scanopy.local.$HOMELAB_DOMAIN`)
+      traefik.http.services.paperless.loadbalancer.server.port: 60072
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      scanopy-postgres:
+        condition: service_healthy
+  scanopy-postgres:
+    image: postgres:17-alpine
+    container_name: Scanopy-Postgres
+    restart: unless-stopped
+#    networks:
+#      - scanopy
+    volumes:
+      - /home/pi/docker/scanopy/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: scanopy
+      POSTGRES_USER: scanopy
+      POSTGRES_PASSWORD: scanopy
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+#  scanopy:
+#    driver: bridge
+#    ipam:
+#      config:
+#        - subnet: 172.31.0.0/16
+#          gateway: 172.31.0.1networks:
+  traefik:
+    external: true
+    name: traefik_traefik
