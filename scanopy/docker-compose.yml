@@ -12,8 +12,8 @@ services:
     environment:
       SCANOPY_LOG_LEVEL: ${SCANOPY_LOG_LEVEL:-info}
       SCANOPY_DATABASE_URL: postgresql://scanopy:scanopy@scanopy-postgres:5432/scanopy
-      SCANOPY_WEB_EXTERNAL_PATH: /app/static
-      SCANOPY_PUBLIC_URL: https://scanopy.local.$HOMELAB_DOMAIN
+#      SCANOPY_WEB_EXTERNAL_PATH: /app/static
+#      SCANOPY_PUBLIC_URL: https://scanopy.local.$HOMELAB_DOMAIN
 #      SCANOPY_INTEGRATED_DAEMON_URL: http://host.docker.internal:60073
     labels:
       traefik.enable: true
